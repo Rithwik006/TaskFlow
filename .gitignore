@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Local Databases / Storage
+db.json
+server/db.json
+
+# IDE / System files
+.DS_Store
+.vscode/
+.idea/
+dist/
+build/

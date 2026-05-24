@@ -94,14 +94,16 @@ const Login = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <button
-              onClick={() => handleSocialLogin(googleLogin)}
+              type="button"
+              onClick={(e) => { e.preventDefault(); handleSocialLogin(googleLogin); }}
               className="flex items-center justify-center gap-2 py-3 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" alt="Google" className="w-5 h-5" />
               <span className="text-sm font-medium">Google</span>
             </button>
             <button
-              onClick={() => handleSocialLogin(githubLogin)}
+              type="button"
+              onClick={(e) => { e.preventDefault(); handleSocialLogin(githubLogin); }}
               className="flex items-center justify-center gap-2 py-3 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               <Github size={20} />

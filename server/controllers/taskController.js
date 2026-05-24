@@ -14,6 +14,8 @@ exports.createTask = async (req, res) => {
       createdBy: req.user._id,
     });
     await task.save();
+    // Emit real‑time event
+    req.io.emit('taskCreated', task);
 
     // Create notification if assigned to someone else
     if (assignedTo && assignedTo.toString() !== req.user._id.toString()) {
@@ -63,6 +65,8 @@ exports.updateTask = async (req, res) => {
     }
 
     const task = await Task.findByIdAndUpdate(id, updates, { new: true });
+    // Emit real‑time event
+    req.io.emit('taskUpdated', task);
     
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
@@ -90,6 +94,8 @@ exports.deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
     const task = await Task.findByIdAndDelete(id);
+    // Emit real‑time event
+    req.io.emit('taskDeleted', { _id: id });
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }

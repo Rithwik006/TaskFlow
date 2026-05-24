@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import TaskModal from '../components/TaskModal';
 
 const Tasks = () => {
-  const { api } = useAuth();
+  const { api, socket } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,6 +33,20 @@ const Tasks = () => {
   useEffect(() => {
     fetchTasks();
   }, []);
+
+    // Real‑time task sync via Socket.io
+    useEffect(() => {
+      if (!socket) return;
+      const refresh = () => fetchTasks();
+      socket.on('taskCreated', refresh);
+      socket.on('taskUpdated', refresh);
+      socket.on('taskDeleted', refresh);
+      return () => {
+        socket.off('taskCreated', refresh);
+        socket.off('taskUpdated', refresh);
+        socket.off('taskDeleted', refresh);
+      };
+    }, [socket]);
 
   const handleEditClick = (task) => {
     setSelectedTask(task);

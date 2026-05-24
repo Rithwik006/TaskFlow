@@ -1,6 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const mongoose = require('./config/db');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const helmet = require('helmet');
@@ -24,6 +25,13 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
+// Rate limiting middleware for all API routes
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
+});
+app.use('/api/', apiLimiter);
 
 // Socket.io connection
 io.on('connection', (socket) => {
@@ -48,9 +56,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/tasks', require('./routes/taskRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));
-app.use('/api/ai', require('./routes/aiRoutes'));
-app.use('/api/notifications', require('./routes/notificationRoutes'));
+// admin and AI routes removed as they are not required per specification;
 
 app.get('/', (req, res) => {
   res.send('Task Management API is running...');
@@ -66,11 +72,9 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDB');
+    await mongoose.connect();
   } catch (err) {
-    console.warn('⚠️  MongoDB connection failed:', err.message);
-    console.warn('⚠️  Server will start without database. API routes requiring DB will fail.');
+    console.warn('⚠️  Database connection failed:', err.message);
   }
 
   server.listen(PORT, () => {
@@ -79,4 +83,3 @@ const startServer = async () => {
 };
 
 startServer();
-

@@ -23,13 +23,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
     { name: 'Tasks', icon: CheckSquare, path: '/tasks' },
     { name: 'Calendar', icon: Calendar, path: '/calendar' },
-    { name: 'AI Assistant', icon: MessageSquare, path: '/ai-chat' },
     { name: 'Profile', icon: User, path: '/profile' },
   ];
-
-  if (dbUser?.role === 'Admin') {
-    navItems.push({ name: 'Admin Panel', icon: ShieldAlert, path: '/admin' });
-  }
 
   navItems.push({ name: 'Settings', icon: Settings, path: '/settings' });
 
