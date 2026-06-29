@@ -77,9 +77,15 @@ const startServer = async () => {
     console.warn('⚠️  Database connection failed:', err.message);
   }
 
-  server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+  // Only start listening if not running in a serverless environment like Vercel
+  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  }
 };
 
 startServer();
+
+// Export the Express app for Vercel Serverless Functions
+module.exports = app;

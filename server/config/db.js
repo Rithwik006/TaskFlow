@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, '../db.json');
+// Use /tmp for serverless environments like Vercel because the standard filesystem is read-only
+const DB_PATH = process.env.VERCEL ? '/tmp/db.json' : path.join(__dirname, '../db.json');
 
 // Initialize db.json if not exists
 if (!fs.existsSync(DB_PATH)) {
